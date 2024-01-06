@@ -2,7 +2,7 @@
 ## Installation
 
 ```bash
-$ git clone github.com:irbistwo/app.git
+$ git clone https://github.com/irbistwo/app
 $ cd app
 $ sudo docker-compose build
 $ sudo docker-compose up -d
