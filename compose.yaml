@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  frontend:
+    build:
+      context: frontend
+      target: development
+    networks:
+      custom_network:
+        ipv4_address: 172.28.0.2
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+
+  backend:
+    build:
+      context: backend
+      target: development
+    networks:
+      custom_network:
+        ipv4_address: 172.28.0.3
+    ports:
+      - 3001:3001
+    volumes:
+     - ./backend:/usr/src/app
+     - /usr/src/app/node_modules
+
+  db:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=applogin
+      - POSTGRES_USER=postgres
+    networks:
+      custom_network:
+        ipv4_address: 172.28.0.4
+    ports:
+     - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./initsql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db-data: {}
+networks:
+  custom_network:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
